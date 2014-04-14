@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<script src="main.js"></script>
+</head>
+<body>
+	<div id="header">
+		<span id="headerTitle">
+			<img src="icon.png" class="icon" />
+			<span>Help Me Pay Off My Home</span>
+		</span>
+		<span id="headerLinks">
+			<a href="index.html">Home</a>
+		</span>
+	</div>
+
+	<div id="whatSection">
+		<div class="center">
+			<div class="sectionTitle">Early Payoff Calculator</div>
+			<div class="sectionContent">
+				Even if we can't get you financial help through our contest, we still want to help.<br />
+				This will hopefully be the best tool on the web for calculating how early you can pay off your mortgage.<br />
+				Remember, something as simple as an extra $10/mn will save you months in the long run.<br /><br />
+				
+				Loan amount: 
+				$<input type="text" id="loanAmount" />
+				<br />
+				
+				Mortgage rate:
+				<input type="text" id="mortgageRate" />%
+				<br />
+				
+				One time extra payment:
+				$<input type="text" id="oneTimePayment" />
+				<!-- put datepicker here as well -->
+				<br />
+				
+				Extra monthly payment:
+				$<input type="text" id="extraMonthly"  />
+				<br />
+				
+				Switch to bi-monthly payments:
+				<input type="checkbox" id="isBiWeekly" />
+				<br />
+				
+				Start date:
+				<!-- TODO: make this all come from jquery datepicker -->
+				<select>
+					<option>1 - January</option>
+					<option>2 - Febuary</option>
+					<option>3 - March</option>
+					<option>4 - April</option>
+					<option>5 - May</option>
+					<option>6 - June</option>
+					<option>7 - July</option>
+					<option>8 - August</option>
+					<option>9 - September</option>
+					<option>10 - October</option>
+					<option>11 - November</option>
+					<option>12 - December</option>
+				</select>
+				<select>
+					<option>2013</option>
+				</select>				
+				<br />
+				
+				<button id="recalculate">Recalculate</button>
+			</div>
+		</div>
+	</div>
+</body>
