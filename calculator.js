@@ -39,7 +39,7 @@ $(function() {
 		//clear out previous table
 		$("#here_table").html("");
 		
-		while(balance >= monthlyPayment + extraMonthly) {
+		while(balance > 0) {
 			monthlyInterest = getInterestPayment(balance);
 			interestPaidAllTime = toMoney(interestPaidAllTime + monthlyInterest);
 			
@@ -47,7 +47,7 @@ $(function() {
 			balance = toMoney(balance - monthlyPayment - extraMonthly);
 			
 			if(lastMonth != startDate.getMonth()) {
-				balance = toMoney( balance + monthlyInterest);
+				balance = toMoney(balance + monthlyInterest);
 				towardsPrincipal = toMoney(monthlyPayment + extraMonthly - monthlyInterest);
 				towardsInterest = toMoney(monthlyInterest);
 			}
@@ -56,15 +56,12 @@ $(function() {
 				towardsInterest = 0;
 			}
 			
-			table += "<tr>";
-			table += "<td>" + paymentNum + "</td>";
-			table += "<td>" + (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() + "</td>";
-			table += "<td>" + balance + "</td>";
-			table += "<td>" + towardsPrincipal + "</td>";
-			table += "<td>" + towardsInterest + "</td>";
-			table += "<td>" + interestPaidAllTime + "</td>";
+			if(balance < 0) {
+				towardsPrincipal = toMoney(towardsPrincipal - Math.abs(balance));
+				balance = 0;
+			}
 			
-			table += "</tr>";
+			table += createRow(paymentNum, startDate, balance, towardsPrincipal, towardsInterest, interestPaidAllTime);
 			
 			lastMonth = startDate.getMonth();
 			if(isBiMonthly)
@@ -73,10 +70,6 @@ $(function() {
 				startDate.setMonth(startDate.getMonth() + 1);
 				
 			paymentNum++;
-		}
-		
-		if(balance > 0) {
-			//do one last payment for balance
 		}
 		
 		table += "</table>";
@@ -88,5 +81,21 @@ $(function() {
 	function getInterestPayment(balance) {
 		// blance * interestRate / months in year
 		return toMoney(balance * interestRate / 100 / 12);
+	}
+	
+	//create a new row in the table using the parameters
+	function createRow(paymentNum, startDate, balance, towardsPrincipal, towardsInterest, interestPaidAllTime) {
+		var row = "";
+		
+		row += "<tr>";
+		row += "<td>" + paymentNum + "</td>";
+		row += "<td>" + (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() + "</td>";
+		row += "<td>" + balance + "</td>";
+		row += "<td>" + towardsPrincipal + "</td>";
+		row += "<td>" + towardsInterest + "</td>";
+		row += "<td>" + interestPaidAllTime + "</td>";
+		row += "</tr>";
+		
+		return row;
 	}
 });
