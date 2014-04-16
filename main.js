@@ -7,7 +7,7 @@ $(function() {
 	} )( jQuery );
 
 	//scroll to sections with links
-	function scrollToId(id){
+	function scrollToId(id) {
 		var tag = $("#" + id);
 		$('html,body').animate({scrollTop: tag.offset().top},'slow');
 	}
