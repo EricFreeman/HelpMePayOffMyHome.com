@@ -1,6 +1,8 @@
 $(function() {
 	var loanAmount, interestRate, monthlyPayment, 
 		extraMonthly, startDate, isBiMonthly;
+		
+	populateStartYear();
 	
 	//get new value of fields
 	$('#recalculate').click(function() {
@@ -77,6 +79,16 @@ $(function() {
 		table += "</table>";
 		
 		$('#here_table').append(table);
+	}
+	
+	//populate the combobox for start year
+	function populateStartYear() {
+		var d = new Date(),
+			combo = $('#startDateYear');
+		
+		for(var i = d.getFullYear(); i >= d.getFullYear() - 30; i--) {
+			combo.append("<option value='" + i + "'>" + i + "</option>");
+		}
 	}
 	
 	//get the part of payment that goes towards interest
