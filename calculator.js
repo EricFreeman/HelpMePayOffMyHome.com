@@ -8,10 +8,12 @@ $(function() {
 		interestRate = $('#interestRate').val();
 		monthlyPayment = $('#monthlyPayment').val();
 		extraMonthly = $('#extraMonthly').val();
-		startDate = new Date('7/1/2013');
 		isBiMonthly = $('#isBiMonthly').prop('checked');
-		
 		if(isBiMonthly) monthlyPayment /= 2;
+		
+		var startMonth = $('#startDateMonth').val();
+		var startYear = $('#startDateYear').val();
+		startDate = new Date(startMonth + '/1/' + startYear);
 		
 		calculateTable();
 	});
