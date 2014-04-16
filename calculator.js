@@ -27,36 +27,42 @@ $(function() {
 		var balance = toMoney(loanAmount),
 			interestPaidAllTime = 0.0,
 			monthlyInterest = 0.0,
-			table = "<table><tr><td>Date Paid</td><td>Balance</td><td>Towards Principal</td><td>Towards Interest</td></tr>",
+			table = "<table><tr><td>Payment #</td><td>Date Paid</td><td>Balance</td><td>Towards Principal</td><td>Towards Interest</td><td>Total Interest Paid</td></tr>",
 			lastMonth, currMonth,
 			towardsPrincipal,
-			towardsInterest;
+			towardsInterest,
+			paymentNum = 1;
+			
+		extraMonthly = toMoney(extraMonthly);
+		monthlyPayment = toMoney(monthlyPayment);
 		
 		//clear out previous table
 		$("#here_table").html("");
 		
-		while(balance >= monthlyPayment) {
+		while(balance >= monthlyPayment + extraMonthly) {
 			monthlyInterest = getInterestPayment(balance);
 			interestPaidAllTime = toMoney(interestPaidAllTime + monthlyInterest);
 			
 			//only the portion of your payment that doesn't go to interest goes to your principal
-			balance = toMoney(balance - toMoney(monthlyPayment));
+			balance = toMoney(balance - monthlyPayment - extraMonthly);
 			
 			if(lastMonth != startDate.getMonth()) {
-				balance = toMoney( balance + toMoney(monthlyInterest));
-				towardsPrincipal = toMoney(monthlyPayment - monthlyInterest);
+				balance = toMoney( balance + monthlyInterest);
+				towardsPrincipal = toMoney(monthlyPayment + extraMonthly - monthlyInterest);
 				towardsInterest = toMoney(monthlyInterest);
 			}
 			else {
-				towardsPrincipal = toMoney(monthlyPayment);
+				towardsPrincipal = toMoney(monthlyPayment + extraMonthly);
 				towardsInterest = 0;
 			}
 			
 			table += "<tr>";
-			table += "<td>" + startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getFullYear() + "</td>";
+			table += "<td>" + paymentNum + "</td>";
+			table += "<td>" + (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() + "</td>";
 			table += "<td>" + balance + "</td>";
 			table += "<td>" + towardsPrincipal + "</td>";
 			table += "<td>" + towardsInterest + "</td>";
+			table += "<td>" + interestPaidAllTime + "</td>";
 			
 			table += "</tr>";
 			
@@ -65,6 +71,8 @@ $(function() {
 				startDate.setDate(startDate.getDate() + 14);
 			else
 				startDate.setMonth(startDate.getMonth() + 1);
+				
+			paymentNum++;
 		}
 		
 		if(balance > 0) {
