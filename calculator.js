@@ -11,6 +11,8 @@ $(function() {
 		startDate = new Date('7/1/2013');
 		isBiMonthly = $('#isBiMonthly').prop('checked');
 		
+		if(isBiMonthly) monthlyPayment /= 2;
+		
 		calculateTable();
 	});
 	
@@ -26,7 +28,9 @@ $(function() {
 			interestPaidAllTime = 0.0,
 			monthlyInterest = 0.0,
 			table = "<table><tr><td>Date Paid</td><td>Balance</td><td>Towards Principal</td><td>Towards Interest</td></tr>",
-			lastMonth, currMonth;
+			lastMonth, currMonth,
+			towardsPrincipal,
+			towardsInterest;
 		
 		//clear out previous table
 		$("#here_table").html("");
@@ -38,16 +42,21 @@ $(function() {
 			//only the portion of your payment that doesn't go to interest goes to your principal
 			balance = toMoney(balance - toMoney(monthlyPayment));
 			
-			if(lastMonth != startDate.getMonth())
+			if(lastMonth != startDate.getMonth()) {
 				balance = toMoney( balance + toMoney(monthlyInterest));
+				towardsPrincipal = toMoney(monthlyPayment - monthlyInterest);
+				towardsInterest = toMoney(monthlyInterest);
+			}
+			else {
+				towardsPrincipal = toMoney(monthlyPayment);
+				towardsInterest = 0;
+			}
 			
 			table += "<tr>";
 			table += "<td>" + startDate.getMonth() + "/" + startDate.getDate() + "/" + startDate.getFullYear() + "</td>";
 			table += "<td>" + balance + "</td>";
-			table += "<td>" + 
-				toMoney(toMoney(monthlyPayment) - toMoney(monthlyInterest)) +
-				"</td>";
-			table += "<td>" + monthlyInterest + "</td>";
+			table += "<td>" + towardsPrincipal + "</td>";
+			table += "<td>" + towardsInterest + "</td>";
 			
 			table += "</tr>";
 			
