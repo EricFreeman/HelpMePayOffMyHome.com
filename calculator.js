@@ -117,6 +117,8 @@ $(function() {
 		num = "$" + num;
 		if(num.indexOf('.') < 0)
 			num = num + ".00";
+		else if(/\.\d$/.test(num))
+			num += "0";
 			
 		return num;
 	}
