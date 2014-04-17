@@ -78,6 +78,9 @@ $(function() {
 				startDate.setMonth(startDate.getMonth() + 1);
 				
 			paymentNum++;
+			
+			if(paymentNum%25==0)
+				table += createAdRow();
 		}
 		
 		table += "</table>";
@@ -112,6 +115,18 @@ $(function() {
 		row += "<td>" + toMoney(towardsPrincipal) + "</td>";
 		row += "<td>" + toMoney(towardsInterest) + "</td>";
 		row += "<td>" + toMoney(interestPaidAllTime) + "</td>";
+		row += "</tr>";
+		
+		return row;
+	}
+	
+	function createAdRow() {
+		var row = "";
+		
+		row += "<tr>";
+		row += "<td colspan='6'>";
+		row += "<iframe src='http://rcm-na.amazon-adsystem.com/e/cm?t=hemepaofmyho-20&o=1&p=12&l=ur1&category=local&banner=0ASW3QKMM8DXW61JZ6G2&f=ifr' width='300' height='250' scrolling='no' border='0' marginwidth='0' style='border:none;' frameborder='0'></iframe><iframe src='http://rcm-na.amazon-adsystem.com/e/cm?t=hemepaofmyho-20&o=1&p=12&l=ur1&category=electronicsrot&f=ifr' width='300' height='250' scrolling='no' border='0' marginwidth='0' style='border:none;' frameborder='0'></iframe>";
+		row += "</td>";
 		row += "</tr>";
 		
 		return row;
