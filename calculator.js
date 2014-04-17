@@ -49,7 +49,6 @@ $(function() {
 		
 		while(balance > 0) {
 			monthlyInterest = getInterestPayment(balance);
-			interestPaidAllTime = round(interestPaidAllTime + monthlyInterest);
 			
 			//only the portion of your payment that doesn't go to interest goes to your principal
 			balance = round(balance - monthlyPayment - extraMonthly);
@@ -58,6 +57,7 @@ $(function() {
 				balance = round(balance + monthlyInterest);
 				towardsPrincipal = round(monthlyPayment + extraMonthly - monthlyInterest);
 				towardsInterest = round(monthlyInterest);
+				interestPaidAllTime = round(interestPaidAllTime + monthlyInterest);
 			}
 			else {
 				towardsPrincipal = round(monthlyPayment + extraMonthly);
