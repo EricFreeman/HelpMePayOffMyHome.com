@@ -118,13 +118,17 @@ $(function() {
 	}
 	
 	function toMoney(num) {
+		var numStart = 1;
 		num = "$" + num;
 		if(num.indexOf('.') < 0)
 			num = num + ".00";
 		else if(/\.\d$/.test(num))
 			num += "0";
 			
-		for(var i = num.indexOf('.') - 3; i > 1; i=i-3) {
+		// fix bug where it was putting comma if number was negative because it started with two chatacters ($-)
+		if (num.substr(0, 2) == '$-') numStart = 2;
+		
+		for(var i = num.indexOf('.') - 3; i > numStart; i=i-3) {
 			num = num.substr(0, i) + ',' + num.substr(i, num.length);
 		}
 			
