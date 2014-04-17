@@ -18,6 +18,11 @@ body {
 	padding-left: 100px;
 }
 
+#headerTitleLink {
+	margin-left: 0px !important;
+	text-decoration: none !important;
+}
+
 #header a {
 	margin-left: 50px;
 }
