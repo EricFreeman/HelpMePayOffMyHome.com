@@ -21,14 +21,14 @@ $(function() {
 	});
 	
 	//rounds to two decimal points and the .000001 fixes 1.005 not rounding to 1.01
-	function toMoney(inp) {
+	function round(inp) {
 		var num = parseFloat(inp);
 		return Math.round((num + 0.00001) * 100) / 100
 	}
 	
 	//calculate new 
 	function calculateTable() {
-		var balance = toMoney(loanAmount),
+		var balance = round(loanAmount),
 			interestPaidAllTime = 0.0,
 			monthlyInterest = 0.0,
 			table = "<table><tr><td>Payment #</td><td>Date Paid</td><td>Balance</td><td>Towards Principal</td><td>Towards Interest</td><td>Total Interest Paid</td></tr>",
@@ -37,31 +37,31 @@ $(function() {
 			towardsInterest,
 			paymentNum = 1;
 			
-		extraMonthly = toMoney(extraMonthly);
-		monthlyPayment = toMoney(monthlyPayment);
+		extraMonthly = round(extraMonthly);
+		monthlyPayment = round(monthlyPayment);
 		
 		//clear out previous table
 		$("#here_table").html("");
 		
 		while(balance > 0) {
 			monthlyInterest = getInterestPayment(balance);
-			interestPaidAllTime = toMoney(interestPaidAllTime + monthlyInterest);
+			interestPaidAllTime = round(interestPaidAllTime + monthlyInterest);
 			
 			//only the portion of your payment that doesn't go to interest goes to your principal
-			balance = toMoney(balance - monthlyPayment - extraMonthly);
+			balance = round(balance - monthlyPayment - extraMonthly);
 			
 			if(lastMonth != startDate.getMonth()) {
-				balance = toMoney(balance + monthlyInterest);
-				towardsPrincipal = toMoney(monthlyPayment + extraMonthly - monthlyInterest);
-				towardsInterest = toMoney(monthlyInterest);
+				balance = round(balance + monthlyInterest);
+				towardsPrincipal = round(monthlyPayment + extraMonthly - monthlyInterest);
+				towardsInterest = round(monthlyInterest);
 			}
 			else {
-				towardsPrincipal = toMoney(monthlyPayment + extraMonthly);
+				towardsPrincipal = round(monthlyPayment + extraMonthly);
 				towardsInterest = 0;
 			}
 			
 			if(balance < 0) {
-				towardsPrincipal = toMoney(towardsPrincipal - Math.abs(balance));
+				towardsPrincipal = round(towardsPrincipal - Math.abs(balance));
 				balance = 0;
 			}
 			
@@ -94,7 +94,7 @@ $(function() {
 	//get the part of payment that goes towards interest
 	function getInterestPayment(balance) {
 		// blance * interestRate / months in year
-		return toMoney(balance * interestRate / 100 / 12);
+		return round(balance * interestRate / 100 / 12);
 	}
 	
 	//create a new row in the table using the parameters
@@ -104,12 +104,20 @@ $(function() {
 		row += "<tr>";
 		row += "<td>" + paymentNum + "</td>";
 		row += "<td>" + (startDate.getMonth() + 1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() + "</td>";
-		row += "<td>" + balance + "</td>";
-		row += "<td>" + towardsPrincipal + "</td>";
-		row += "<td>" + towardsInterest + "</td>";
-		row += "<td>" + interestPaidAllTime + "</td>";
+		row += "<td>" + toMoney(balance) + "</td>";
+		row += "<td>" + toMoney(towardsPrincipal) + "</td>";
+		row += "<td>" + toMoney(towardsInterest) + "</td>";
+		row += "<td>" + toMoney(interestPaidAllTime) + "</td>";
 		row += "</tr>";
 		
 		return row;
+	}
+	
+	function toMoney(num) {
+		num = "$" + num;
+		if(num.indexOf('.') < 0)
+			num = num + ".00";
+			
+		return num;
 	}
 });
