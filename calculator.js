@@ -6,10 +6,10 @@ $(function() {
 	
 	//get new value of fields
 	$('#recalculate').click(function() {
-		loanAmount = $('#loanAmount').val();
+		loanAmount = fromMoney($('#loanAmount').val());
 		interestRate = $('#interestRate').val();
-		monthlyPayment = $('#monthlyPayment').val();
-		extraMonthly = $('#extraMonthly').val();
+		monthlyPayment = fromMoney($('#monthlyPayment').val());
+		extraMonthly = fromMoney($('#extraMonthly').val());
 		isBiMonthly = $('#isBiMonthly').prop('checked');
 		if(isBiMonthly) monthlyPayment /= 2;
 		
@@ -18,6 +18,10 @@ $(function() {
 		startDate = new Date(startMonth + '/1/' + startYear);
 		
 		calculateTable();
+		
+		$('#loanAmount').val(toMoney(fromMoney($('#loanAmount').val())));
+		$('#monthlyPayment').val(toMoney(fromMoney($('#monthlyPayment').val())));
+		$('#extraMonthly').val(toMoney(fromMoney($('#extraMonthly').val())));
 	});
 	
 	//rounds to two decimal points and the .000001 fixes 1.005 not rounding to 1.01
@@ -125,5 +129,9 @@ $(function() {
 		}
 			
 		return num;
+	}
+	
+	function fromMoney(num) {
+		return parseFloat(num.replace('$', '').replace(',', ''));
 	}
 });
