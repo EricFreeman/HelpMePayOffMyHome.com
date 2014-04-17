@@ -94,7 +94,7 @@ $(function() {
 	//get the part of payment that goes towards interest
 	function getInterestPayment(balance) {
 		// blance * interestRate / months in year
-		return round(balance * interestRate / 100 / 12);
+		return round(balance * (interestRate / 100) / 12);
 	}
 	
 	//create a new row in the table using the parameters
@@ -119,6 +119,10 @@ $(function() {
 			num = num + ".00";
 		else if(/\.\d$/.test(num))
 			num += "0";
+			
+		for(var i = num.indexOf('.') - 3; i > 1; i=i-3) {
+			num = num.substr(0, i) + ',' + num.substr(i, num.length);
+		}
 			
 		return num;
 	}
