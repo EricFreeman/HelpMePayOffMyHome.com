@@ -4,6 +4,7 @@ $(function() {
 		
 	populateStartYear();
 	
+	//default value of text boxes to $0.00 so code won't break when they're empty
 	$('input[type="text"]').focusout(function() {
 		if(this.value=='') this.value = toMoney(0);
 	});
@@ -142,7 +143,7 @@ $(function() {
 		return row;
 	}
 	
-	//Format the passed in float as money
+	//format the passed in float as money
 	function toMoney(num) {
 		var numStart = 1;
 		num = "$" + num;
@@ -151,9 +152,10 @@ $(function() {
 		else if(/\.\d$/.test(num))
 			num += "0";
 			
-		//Fix bug where it was putting comma if number was negative because it started with two chatacters ($-)
+		//fix bug where it was putting comma if number was negative because it started with two chatacters ($-)
 		if (num.substr(0, 2) == '$-') numStart = 2;
 		
+		//format the number with commas
 		for(var i = num.indexOf('.') - 3; i > numStart; i=i-3) {
 			num = num.substr(0, i) + ',' + num.substr(i, num.length);
 		}
@@ -161,7 +163,7 @@ $(function() {
 		return num;
 	}
 	
-	//Take a string formatted as money and turn it into a float
+	//take a string formatted as money and turn it into a float
 	function fromMoney(num) {
 		return parseFloat(num.replace('$', '').replace(',', ''));
 	}
