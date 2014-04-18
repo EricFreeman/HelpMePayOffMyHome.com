@@ -4,6 +4,10 @@ $(function() {
 		
 	populateStartYear();
 	
+	$('input[type="text"]').focusout(function() {
+		if(this.value=='') this.value = toMoney(0);
+	});
+	
 	//get new value of fields
 	$('#recalculate').click(function() {
 		loanAmount = fromMoney($('#loanAmount').val());
@@ -53,6 +57,7 @@ $(function() {
 			//only the portion of your payment that doesn't go to interest goes to your principal
 			balance = round(balance - monthlyPayment - extraMonthly);
 			
+			//if it's still the previous month, don't add in interest again (for bi-weekly payments)
 			if(lastMonth != startDate.getMonth()) {
 				balance = round(balance + monthlyInterest);
 				towardsPrincipal = round(monthlyPayment + extraMonthly - monthlyInterest);
@@ -64,23 +69,27 @@ $(function() {
 				towardsInterest = 0;
 			}
 			
+			//if your final payments goes under balance, then take that part out of the payment and reset balance to 0
 			if(balance < 0) {
 				towardsPrincipal = round(towardsPrincipal - Math.abs(balance));
 				balance = 0;
 			}
 			
+			//add the row to the table
 			table += createRow(paymentNum, startDate, balance, towardsPrincipal, towardsInterest, interestPaidAllTime);
 			
+			//increment the date by 1 month or 14 days depending on payment schedule
 			lastMonth = startDate.getMonth();
 			if(isBiMonthly)
 				startDate.setDate(startDate.getDate() + 14);
 			else
 				startDate.setMonth(startDate.getMonth() + 1);
-				
-			paymentNum++;
 			
+			//every 25th row throw in an advertisement row as well
 			if(paymentNum%25==0)
 				table += createAdRow();
+				
+			paymentNum++;
 		}
 		
 		table += "</table>";
@@ -120,6 +129,7 @@ $(function() {
 		return row;
 	}
 	
+	//I'm a horrible person for this, I know :(
 	function createAdRow() {
 		var row = "";
 		
@@ -132,6 +142,7 @@ $(function() {
 		return row;
 	}
 	
+	//Format the passed in float as money
 	function toMoney(num) {
 		var numStart = 1;
 		num = "$" + num;
@@ -140,7 +151,7 @@ $(function() {
 		else if(/\.\d$/.test(num))
 			num += "0";
 			
-		// fix bug where it was putting comma if number was negative because it started with two chatacters ($-)
+		//Fix bug where it was putting comma if number was negative because it started with two chatacters ($-)
 		if (num.substr(0, 2) == '$-') numStart = 2;
 		
 		for(var i = num.indexOf('.') - 3; i > numStart; i=i-3) {
@@ -150,6 +161,7 @@ $(function() {
 		return num;
 	}
 	
+	//Take a string formatted as money and turn it into a float
 	function fromMoney(num) {
 		return parseFloat(num.replace('$', '').replace(',', ''));
 	}
