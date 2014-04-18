@@ -6,7 +6,10 @@ $(function() {
 	
 	//default value of text boxes to $0.00 so code won't break when they're empty
 	$('input[type="text"]').focusout(function() {
-		if(this.value=='') this.value = toMoney(0);
+		if(this.value=='')
+			this.value = toMoney(0);
+		else if($(this).hasClass('money')) // TODO: fix this at work!!
+			this.value = toMoney(fromMoney(this.value));
 	});
 	
 	//get new value of fields
