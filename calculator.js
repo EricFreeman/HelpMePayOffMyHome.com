@@ -1,6 +1,6 @@
 $(function() {
 	var loanAmount, interestRate, monthlyPayment, 
-		extraMonthly, startDate, isBiMonthly;
+		extraMonthly, startDate, isBiMonthly, oneOffCount = 1;
 		
 	populateStartYear();
 	
@@ -8,7 +8,7 @@ $(function() {
 	$('input[type="text"]').focusout(function() {
 		if(this.value=='')
 			this.value = toMoney(0);
-		else if($(this).hasClass('money')) // TODO: fix this at work!!
+		else if($(this).hasClass('money'))
 			this.value = toMoney(fromMoney(this.value));
 	});
 	
@@ -104,11 +104,12 @@ $(function() {
 	//populate the combobox for start year
 	function populateStartYear() {
 		var d = new Date(),
-			combo = $('#startDateYear');
-		
-		for(var i = d.getFullYear(); i >= d.getFullYear() - 30; i--) {
-			combo.append("<option value='" + i + "'>" + i + "</option>");
-		}
+			combo = $('.year').each(function() {
+				$(this).html('');
+				for(var i = d.getFullYear(); i >= d.getFullYear() - 30; i--) {
+					$(this).append("<option value='" + i + "'>" + i + "</option>");
+				}
+			})
 	}
 	
 	//get the part of payment that goes towards interest
@@ -170,4 +171,11 @@ $(function() {
 	function fromMoney(num) {
 		return parseFloat(num.replace('$', '').replace(',', ''));
 	}
+	
+	//create new box for one off payments every time you click the plus sign
+	$('#addMoreOneOff').click(function(d) {
+		oneOffCount++;
+		$('#oneOffContainer').append("<div><input type='text' class='money' id='oneoff" + oneOffCount + "' value='$0.00' /><select class='oneoffDate" + oneOffCount + "'><option value='1'>1 - January</option><option value='2'>2 - Febuary</option><option value='3'>3 - March</option><option value='4'>4 - April</option><option value='5'>5 - May</option><option value='6'>6 - June</option><option value='7'>7 - July</option><option value='8'>8 - August</option><option value='9'>9 - September</option><option value='10'>10 - October</option><option value='11'>11 - November</option><option value='12'>12 - December</option></select><select class='oneoffYear" + oneOffCount + " year'></select></div>");
+		populateStartYear();
+	});
 });
