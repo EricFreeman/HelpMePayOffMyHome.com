@@ -3,14 +3,17 @@ $(function() {
 		extraMonthly, startDate, isBiMonthly, oneOffCount = 1;
 		
 	populateStartYear();
+	applyMoneyBind();
 	
 	//default value of text boxes to $0.00 so code won't break when they're empty
-	$('input[type="text"]').focusout(function() {
-		if(this.value=='')
-			this.value = toMoney(0);
-		else if($(this).hasClass('money'))
-			this.value = toMoney(fromMoney(this.value));
-	});
+	function applyMoneyBind() {
+		$('input[type="text"]').focusout(function() {
+			if(this.value=='')
+				this.value = toMoney(0);
+			else if($(this).hasClass('money'))
+				this.value = toMoney(fromMoney(this.value));
+		});
+	}
 	
 	//get new value of fields
 	$('#recalculate').click(function() {
@@ -84,10 +87,30 @@ $(function() {
 			
 			//increment the date by 1 month or 14 days depending on payment schedule
 			lastMonth = startDate.getMonth();
-			if(isBiMonthly)
+			if(isBiMonthly) {
+				var newEnd = new Date(startDate.getTime());
+				newEnd.setDate(startDate.getDate() + 14);
+				var extra = checkExtraPayment(startDate, newEnd);
+				if(extra > 0) {
+					paymentNum++;
+					balance = round(balance - extra);
+					table += createRow(paymentNum, startDate, balance, extra, 0, interestPaidAllTime);
+				}
+				
 				startDate.setDate(startDate.getDate() + 14);
-			else
+			}
+			else {
+				var newEnd = new Date(startDate.getTime());
+				newEnd.setMonth(startDate.getMonth() + 1);
+				var extra = checkExtraPayment(startDate, newEnd);
+				if(extra > 0) {
+					paymentNum++;
+					balance = round(balance - extra);
+					table += createRow(paymentNum, startDate, balance, extra, 0, interestPaidAllTime);
+				}
+				
 				startDate.setMonth(startDate.getMonth() + 1);
+			}
 			
 			//every 25th row throw in an advertisement row as well
 			if(paymentNum%25==0)
@@ -99,6 +122,22 @@ $(function() {
 		table += "</table>";
 		
 		$('#here_table').append(table);
+	}
+	
+	function checkExtraPayment(startDate, endDate) {
+		var sum = 0, date, year, lookDate;
+		for(var i = 1; i <= oneOffCount; i++) {
+			//any dates between mean do extra payment straight to principal here
+			date = $('.oneoffDate' + i).val();
+			year = $('.oneoffYear' + i).val();
+			lookDate = new Date(date  + '/' + '1/' + year);
+			
+			if(startDate <= lookDate && lookDate < endDate) {
+				sum += fromMoney($('#oneoff' + i).val());
+			}
+		}
+		
+		return sum;
 	}
 	
 	//populate the combobox for start year
@@ -163,7 +202,7 @@ $(function() {
 		for(var i = num.indexOf('.') - 3; i > numStart; i=i-3) {
 			num = num.substr(0, i) + ',' + num.substr(i, num.length);
 		}
-			
+		
 		return num;
 	}
 	
@@ -177,5 +216,6 @@ $(function() {
 		oneOffCount++;
 		$('#oneOffContainer').append("<div><input type='text' class='money' id='oneoff" + oneOffCount + "' value='$0.00' /><select class='oneoffDate" + oneOffCount + "'><option value='1'>1 - January</option><option value='2'>2 - Febuary</option><option value='3'>3 - March</option><option value='4'>4 - April</option><option value='5'>5 - May</option><option value='6'>6 - June</option><option value='7'>7 - July</option><option value='8'>8 - August</option><option value='9'>9 - September</option><option value='10'>10 - October</option><option value='11'>11 - November</option><option value='12'>12 - December</option></select><select class='oneoffYear" + oneOffCount + " year'></select></div>");
 		populateStartYear();
+		applyMoneyBind();
 	});
 });
