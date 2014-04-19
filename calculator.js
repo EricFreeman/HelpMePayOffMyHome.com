@@ -50,7 +50,8 @@ $(function() {
 			lastMonth, currMonth,
 			towardsPrincipal,
 			towardsInterest,
-			paymentNum = 1;
+			paymentNum = 1,
+			lastMonthBalance = round(loanAmount);
 			
 		extraMonthly = round(extraMonthly);
 		monthlyPayment = round(monthlyPayment);
@@ -64,14 +65,20 @@ $(function() {
 			//only the portion of your payment that doesn't go to interest goes to your principal
 			balance = round(balance - monthlyPayment - extraMonthly);
 			
-			//if it's still the previous month, don't add in interest again (for bi-weekly payments)
 			if(lastMonth != startDate.getMonth()) {
 				balance = round(balance + monthlyInterest);
 				towardsPrincipal = round(monthlyPayment + extraMonthly - monthlyInterest);
 				towardsInterest = round(monthlyInterest);
 				interestPaidAllTime = round(interestPaidAllTime + monthlyInterest);
+				
+				//improper inputs causing the balance to go up instead of down
+				if(balance > lastMonthBalance) {
+					balance = 0;
+					table += "<tr><td colspan='6'><span class='bold'>IMPROPER INPUTS</span></td></tr>";
+				}
 			}
 			else {
+				//if it's still the previous month, don't add in interest again (for bi-weekly payments)
 				towardsPrincipal = round(monthlyPayment + extraMonthly);
 				towardsInterest = 0;
 			}
