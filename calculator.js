@@ -149,6 +149,14 @@ $(function() {
 					$(this).append("<option value='" + i + "'>" + i + "</option>");
 				}
 			})
+			
+			combo = $('.paymentYear').each(function() {
+				$(this).html('');
+				for(var i = d.getFullYear() + 30; i >= d.getFullYear() - 30; i--) {
+					$(this).append("<option value='" + i + "'>" + i + "</option>");
+				}
+				$(this).val(d.getFullYear());
+			})
 	}
 	
 	//get the part of payment that goes towards interest
@@ -214,7 +222,7 @@ $(function() {
 	//create new box for one off payments every time you click the plus sign
 	$('#addMoreOneOff').click(function(d) {
 		oneOffCount++;
-		$('#oneOffContainer').append("<div><input type='text' class='money' id='oneoff" + oneOffCount + "' value='$0.00' /><select class='oneoffDate" + oneOffCount + "'><option value='1'>1 - January</option><option value='2'>2 - Febuary</option><option value='3'>3 - March</option><option value='4'>4 - April</option><option value='5'>5 - May</option><option value='6'>6 - June</option><option value='7'>7 - July</option><option value='8'>8 - August</option><option value='9'>9 - September</option><option value='10'>10 - October</option><option value='11'>11 - November</option><option value='12'>12 - December</option></select><select class='oneoffYear" + oneOffCount + " year'></select></div>");
+		$('#oneOffContainer').append("<div><input type='text' class='money' id='oneoff" + oneOffCount + "' value='$0.00' /><select class='oneoffDate" + oneOffCount + "'><option value='1'>1 - January</option><option value='2'>2 - Febuary</option><option value='3'>3 - March</option><option value='4'>4 - April</option><option value='5'>5 - May</option><option value='6'>6 - June</option><option value='7'>7 - July</option><option value='8'>8 - August</option><option value='9'>9 - September</option><option value='10'>10 - October</option><option value='11'>11 - November</option><option value='12'>12 - December</option></select><select class='oneoffYear" + oneOffCount + " paymentYear'></select></div>");
 		populateStartYear();
 		applyMoneyBind();
 	});
