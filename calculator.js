@@ -1,6 +1,6 @@
 $(function() {
 	var loanAmount, interestRate, monthlyPayment, 
-		extraMonthly, startDate, isBiMonthly, oneOffCount = 1;
+		extraMonthly, startDate, isBiMonthly, oneOffCount = 0;
 		
 	populateStartYear();
 	applyMoneyBind();
